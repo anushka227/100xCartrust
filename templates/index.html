@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}Car details — Car Trust{% endblock %}
+{% block content %}
+<form method="post" action="{{ url_for('verify') }}">
+  <section class="card">
+    <div class="card-head">
+      <h2>Vehicle &amp; purchase details</h2>
+      <span class="pill">Page 1 — your input</span>
+    </div>
+    <p class="card-lead">
+      Fields follow <strong>Car Trust Data set (1).xlsx</strong>. Groups match the workbook sources
+      (RTO, loan bank / PAN, insurance, third party). Mock APIs return the selected example dataset.
+    </p>
+    <label>
+      <span>Mock API dataset</span>
+      <select name="scenario" required>
+        {% for value, label in scenarios %}
+          <option value="{{ value }}">{{ label }}</option>
+        {% endfor %}
+      </select>
+      <small>Choose which mocked backend record to compare against.</small>
+    </label>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>{{ source_labels['rto'] }}</h2>
+      <span class="pill">Verified via mock RTO API</span>
+    </div>
+    <div class="field-grid">
+      {% for f in grouped_fields['rto'] %}
+        <label>
+          <span>{{ f.label }}</span>
+          {% if f.input_type == 'textarea' %}
+            <textarea name="{{ f.key }}" placeholder="{{ f.placeholder }}" rows="3"></textarea>
+          {% elif f.input_type == 'date' %}
+            <input type="text" name="{{ f.key }}" placeholder="{{ f.placeholder }}" autocomplete="off" />
+          {% elif f.input_type == 'number' %}
+            <input type="number" name="{{ f.key }}" placeholder="{{ f.placeholder }}" min="0" step="1" />
+          {% else %}
+            <input type="text" name="{{ f.key }}" placeholder="{{ f.placeholder }}" />
+          {% endif %}
+          <small>Column source in sheet: <strong>Source RTO</strong></small>
+        </label>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Loan bank — PAN (sent to insurance mock)</h2>
+      <span class="pill">Workbook: Source Loan Bank</span>
+    </div>
+    <div class="field-grid">
+      {% for f in grouped_fields['insurance'] %}
+        {% if f.key == 'pan' %}
+          <label class="field-span-full">
+            <span>{{ f.label }}</span>
+            <input type="text" name="{{ f.key }}" placeholder="{{ f.placeholder }}" />
+            <small>Excel groups this under loan bank; the mock <strong>insurance</strong> response includes PAN for KYC-style matching.</small>
+          </label>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>{{ source_labels['insurance'] }}</h2>
+      <span class="pill">Verified via mock insurance API</span>
+    </div>
+    <div class="field-grid">
+      {% for f in grouped_fields['insurance'] %}
+        {% if f.key != 'pan' %}
+          <label>
+            <span>{{ f.label }}</span>
+            {% if f.input_type == 'textarea' %}
+              <textarea name="{{ f.key }}" placeholder="{{ f.placeholder }}" rows="3"></textarea>
+            {% else %}
+              <input type="text" name="{{ f.key }}" placeholder="{{ f.placeholder }}" />
+            {% endif %}
+            <small>Column source: <strong>Source: Car Insurance Company</strong></small>
+          </label>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>{{ source_labels['third_party'] }}</h2>
+      <span class="pill">Verified via mock third-party API</span>
+    </div>
+    <div class="field-grid">
+      {% for f in grouped_fields['third_party'] %}
+        <label>
+          <span>{{ f.label }}</span>
+          {% if f.input_type == 'textarea' %}
+            <textarea name="{{ f.key }}" placeholder="{{ f.placeholder }}" rows="3"></textarea>
+          {% elif f.input_type == 'number' %}
+            <input type="number" name="{{ f.key }}" placeholder="{{ f.placeholder }}" min="0" step="1" />
+          {% else %}
+            <input type="text" name="{{ f.key }}" placeholder="{{ f.placeholder }}" />
+          {% endif %}
+          <small>Column source: <strong>third party Automobile verification service</strong></small>
+        </label>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="row-actions">
+    <button class="primary" type="submit">Run verification</button>
+    <span class="link-quiet">11 attributes compared across 3 providers</span>
+  </div>
+</form>
+{% endblock %}

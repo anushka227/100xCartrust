@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Verification results — Car Trust{% endblock %}
+{% block content %}
+<section class="score-banner">
+  <div class="score-banner__inner">
+    <div class="score-banner__block">
+      <p class="score-banner__label">Exact field matches</p>
+      <p class="score-banner__value score-banner__value--good">{{ summary.matched }}<span class="score-banner__denom"> / {{ summary.total }}</span></p>
+      <p class="score-banner__hint">
+        {% set miss = summary.total - summary.matched %}
+        {% if miss > 0 %}
+          <span class="score-banner__hint-bad">{{ miss }} mismatch{% if miss != 1 %}es{% endif %}</span>
+        {% else %}
+          <span class="score-banner__hint-good">All fields aligned</span>
+        {% endif %}
+      </p>
+    </div>
+    <div class="score-banner__divider" aria-hidden="true"></div>
+    <div class="score-banner__block">
+      <p class="score-banner__label">Average similarity</p>
+      <p class="score-banner__value">{{ summary.avg_percent }}<span class="score-banner__pct">%</span></p>
+      <p class="score-banner__hint score-banner__hint--muted">Weighted across all providers</p>
+    </div>
+  </div>
+</section>
+
+{% for source_key in ['rto', 'insurance', 'third_party'] %}
+  <section class="card">
+    <div class="card-head">
+      <h2>{{ source_labels[source_key] }}</h2>
+      <span class="pill">Mock response · {{ scenario }}</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Your input</th>
+            <th>Verified (API)</th>
+            <th>Match</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in grouped[source_key] %}
+            <tr class="data-row {% if row.matched %}data-row--match{% else %}data-row--mismatch{% endif %}">
+              <td class="data-row__field">{{ row.label }}</td>
+              <td class="mono data-cell data-cell--user">{{ row.user or "—" }}</td>
+              <td class="mono data-cell data-cell--verified">{{ row.verified or "—" }}</td>
+              <td class="data-row__status">
+                {% if row.matched %}
+                  <span class="status-badge status-badge--ok">Match</span>
+                  <span class="status-score status-score--ok">{{ row.score }}%</span>
+                {% else %}
+                  <span class="status-badge status-badge--bad">Mismatch</span>
+                  <span class="status-score status-score--bad">{{ row.score }}%</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <details>
+      <summary>Raw JSON (mock {{ source_labels[source_key] }})</summary>
+      <pre class="json-block">{{ raw_responses[source_key] | tojson(indent=2) }}</pre>
+    </details>
+  </section>
+{% endfor %}
+
+<p class="page-footer-link">
+  <a href="{{ url_for('index') }}">← Edit car details</a>
+</p>
+{% endblock %}
