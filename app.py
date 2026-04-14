@@ -33,6 +33,10 @@ def index():
 
 @app.post("/login")
 def login():
+    auth_action = request.form.get("auth_action")
+    if auth_action == "guest":
+        return redirect(url_for("home"))
+
     name = (request.form.get("name") or "").strip()
     email = (request.form.get("email") or "").strip()
     phone = (request.form.get("phone") or "").strip()
