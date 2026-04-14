@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+
 from flask import Flask, redirect, render_template, request, url_for
 
 from field_config import FIELDS, SOURCE_LABELS
@@ -26,6 +28,32 @@ def _fields_by_source():
 
 @app.get("/")
 def index():
+    return render_template("login.html")
+
+
+@app.post("/login")
+def login():
+    name = (request.form.get("name") or "").strip()
+    email = (request.form.get("email") or "").strip()
+    phone = (request.form.get("phone") or "").strip()
+
+    if not (name and email and phone):
+        return render_template(
+            "login.html",
+            error="Please fill Name, Email ID, and Phone Number to continue.",
+            values={"name": name, "email": email, "phone": phone},
+        )
+
+    return redirect(url_for("home"))
+
+
+@app.get("/home")
+def home():
+    return render_template("home.html")
+
+
+@app.get("/details")
+def details():
     grouped_fields = _fields_by_source()
     return render_template(
         "index.html",
@@ -69,8 +97,11 @@ def verify():
 
 @app.get("/results")
 def results_redirect():
-    return redirect(url_for("index"))
+    return redirect(url_for("details"))
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=3000, debug=True)
+    host = os.environ.get("FLASK_RUN_HOST", "0.0.0.0")
+    port = int(os.environ.get("PORT", 3000))
+    debug = os.environ.get("FLASK_DEBUG", "false").lower() == "true"
+    app.run(host=host, port=port, debug=debug)

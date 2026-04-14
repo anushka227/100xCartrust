@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}User login — Car Trust{% endblock %}
+{% block content %}
+<form method="post" action="{{ url_for('login') }}">
+  <section class="card auth-card">
+    <div class="card-head">
+      <h2>User login</h2>
+      <span class="pill">Page 1 — account access</span>
+    </div>
+    <p class="card-lead">
+      Start your Car Trust journey. Enter your details and choose whether you are signing up or logging in as an existing user.
+    </p>
+    {% if error %}
+      <p class="form-error">{{ error }}</p>
+    {% endif %}
+    {% set data = values or {} %}
+    <div class="field-grid">
+      <label>
+        <span>Name</span>
+        <input type="text" name="name" placeholder="Enter your full name" value="{{ data.get('name', '') }}" required />
+      </label>
+      <label>
+        <span>Email ID</span>
+        <input type="email" name="email" placeholder="name@email.com" value="{{ data.get('email', '') }}" required />
+      </label>
+      <label class="field-span-full">
+        <span>Phone Number</span>
+        <input type="tel" name="phone" placeholder="10-digit phone number" value="{{ data.get('phone', '') }}" required />
+      </label>
+    </div>
+    <div class="row-actions">
+      <button class="primary" type="submit" name="auth_action" value="signup">Sign up</button>
+      <button class="secondary" type="submit" name="auth_action" value="login">Log in as existing user</button>
+    </div>
+  </section>
+</form>
+{% endblock %}

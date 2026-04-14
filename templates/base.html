@@ -21,6 +21,11 @@
           <p>Second-hand purchase checks — mock RTO, insurance &amp; verification APIs</p>
         </div>
       </header>
+      <nav class="top-nav">
+        <a href="{{ url_for('index') }}">Login</a>
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('details') }}">Car details</a>
+      </nav>
       {% block content %}{% endblock %}
     </div>
   </body>

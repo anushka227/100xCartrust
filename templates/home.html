@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Home — Car Trust{% endblock %}
+{% block content %}
+<section class="card">
+  <div class="card-head">
+    <h2>Welcome to Car Trust</h2>
+    <span class="pill">Home page</span>
+  </div>
+  <p class="card-lead">
+    Car Trust helps second-hand car buyers verify critical facts against mocked provider APIs before purchase.
+  </p>
+  <div class="row-actions">
+    <a class="secondary-link" href="{{ url_for('index') }}">Back to login</a>
+    <a class="cta-link" href="{{ url_for('details') }}">Continue to car details</a>
+    <span class="link-quiet">Flow: Login → Home → Car details → Verification results.</span>
+  </div>
+</section>
+
+<section class="card">
+  <div class="card-head">
+    <h2>Services in this app</h2>
+    <span class="pill">What gets verified</span>
+  </div>
+  <div class="service-grid">
+    <article class="service-item">
+      <h3>RTO Verification</h3>
+      <p>Checks registration details like car number, owner name, and date of purchase.</p>
+    </article>
+    <article class="service-item">
+      <h3>Insurance Validation</h3>
+      <p>Compares insurance ID, service centre records, and accident history.</p>
+    </article>
+    <article class="service-item">
+      <h3>Loan Bank / PAN Match</h3>
+      <p>Validates PAN details used for KYC-style cross checks in insurance records.</p>
+    </article>
+    <article class="service-item">
+      <h3>Third-Party Vehicle Health</h3>
+      <p>Reviews colour change, mechanical issues, and odometer readings.</p>
+    </article>
+  </div>
+</section>
+
+<section class="card">
+  <div class="card-head">
+    <h2>Try one detail from Excel</h2>
+    <span class="pill">Single field example</span>
+  </div>
+  <p class="card-lead">
+    If you only want to begin with one field from <strong>Car Trust Data set (1).xlsx</strong>, start with the RTO car number.
+  </p>
+  <div class="field-grid">
+    <label class="field-span-full">
+      <span>Car Number (Source RTO)</span>
+      <input type="text" placeholder="Example: UP 32 DY 2234" />
+      <small>This is one of the key fields used to compare your entry against the selected mock record.</small>
+    </label>
+  </div>
+</section>
+
+<section class="card">
+  <div class="card-head">
+    <h2>Data source summary</h2>
+    <span class="pill">Provider overview</span>
+  </div>
+  <ul class="summary-list">
+    <li><strong>RTO:</strong> Ownership and registration authenticity.</li>
+    <li><strong>Insurance companies:</strong> Policy linkage and incident history.</li>
+    <li><strong>Banks:</strong> Loan-bank grouped PAN details for identity cross-checks.</li>
+    <li><strong>Third-party verifiers:</strong> Physical condition and odometer insights.</li>
+  </ul>
+</section>
+{% endblock %}

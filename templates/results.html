@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Verification results — Car Trust{% endblock %}
 {% block content %}
+<section class="card page-marker-card">
+  <div class="card-head">
+    <h2>Verification report</h2>
+    <span class="pill">Page 3 — results</span>
+  </div>
+</section>
+
 <section class="score-banner">
   <div class="score-banner__inner">
     <div class="score-banner__block">
@@ -67,7 +74,8 @@
   </section>
 {% endfor %}
 
-<p class="page-footer-link">
-  <a href="{{ url_for('index') }}">← Edit car details</a>
-</p>
+<div class="row-actions">
+  <a class="secondary-link" href="{{ url_for('details') }}">Back to car details</a>
+  <a class="cta-link" href="{{ url_for('home') }}">Go to home page</a>
+</div>
 {% endblock %}
